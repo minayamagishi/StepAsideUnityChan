@@ -70,13 +70,13 @@ public class UnityChanController : MonoBehaviour
 
 
         //Unityちゃんを矢印キーまたはボタンに応じて左右に移動させる（追加 2,9）
-        if(Input.GetKey(KeyCode.LeftArrow) || this.isLButtonDown && -this.movableRange < this.transform.position.x)
+        if((Input.GetKey(KeyCode.LeftArrow) || this.isLButtonDown) && -this.movableRange < this.transform.position.x)
         {
             //左に移動（追加 2）
             this.myRigidbody.AddForce(-this.turnForce, 0, 0);
             
         }
-        else if(Input.GetKey(KeyCode.RightArrow) || this.isRButtonDown && this.transform.position.x < this.movableRange)
+        else if((Input.GetKey(KeyCode.RightArrow) || this.isRButtonDown) && this.transform.position.x < this.movableRange)
         {
             //右に移動（追加 2）
             this.myRigidbody.AddForce(this.turnForce, 0, 0);

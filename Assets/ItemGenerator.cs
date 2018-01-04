@@ -16,12 +16,16 @@ public class ItemGenerator : MonoBehaviour {
     private int goalPos = 120;
     //アイテムを出すx方向の範囲
     private float posRange = 3.4f;
-    
+
+    //◆発展課題◆スタート時に見えている画面範囲の地点（-140は仮）
+    private int visblePos = -140;
+ 
 	// Use this for initialization
+    //◆発展課題◆初期画面内のみにアイテムを出すように変更
 	void Start () {
-		
-        //一定の距離ごとにアイテムを生成
-        for(int i = startPos; i < goalPos; i+=15)
+
+        //一定の距離ごとにアイテムを生成　◆発展課題◆見える範囲に限定
+        for (int i = startPos; i < visblePos; i += 15)
         {
             //どのアイテムを出すのかをランダムに設定
             int num = Random.Range(0, 10);
@@ -29,7 +33,7 @@ public class ItemGenerator : MonoBehaviour {
             if (num <= 1)
             {
                 //コーンをx軸方向に一直線に生成
-                for(float j = -1; j <= 1; j += 0.4f)
+                for (float j = -1; j <= 1; j += 0.4f)
                 {
                     GameObject cone = Instantiate(conePrefab) as GameObject;
                     cone.transform.position = new Vector3(4 * j, cone.transform.position.y, i);
@@ -45,13 +49,13 @@ public class ItemGenerator : MonoBehaviour {
                     //アイテムを置くZ座標のオフセットをランダムに設定
                     int offsetZ = Random.Range(-5, 6);
                     //60%コイン配置:30%車配置:10%何もなし
-                    if(1 <= item && item <= 6)
+                    if (1 <= item && item <= 6)
                     {
                         //コインを生成
                         GameObject coin = Instantiate(coinPrefab) as GameObject;
                         coin.transform.position = new Vector3(posRange * j, coin.transform.position.y, i + offsetZ);
                     }
-                    else if(7 <= item && item <= 9)
+                    else if (7 <= item && item <= 9)
                     {
                         //車を生成
                         GameObject car = Instantiate(carPrefab) as GameObject;
@@ -63,10 +67,61 @@ public class ItemGenerator : MonoBehaviour {
             }
         }
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
+
+    // Update is called once per frame
+    //◆発展課題◆ユニティちゃんの位置に応じてアイテムを動的に生成
+    void Update () {
+
+        //一定の距離ごとにアイテムを生成　◆発展課題◆画面外からゴールまでに限定
+        for (int i = visblePos; i < goalPos; i += 15)
+        {
+            //どのアイテムを出すのかをランダムに設定
+            int num = Random.Range(0, 10);
+
+            if (num <= 1)
+            {
+                //コーンをx軸方向に一直線に生成
+                for (float j = -1; j <= 1; j += 0.4f)
+                {
+                    GameObject cone = Instantiate(conePrefab) as GameObject;
+                    cone.transform.position = new Vector3(4 * j, cone.transform.position.y, i);
+                }
+            }
+            else
+            {
+                //レーンごとにアイテムを生成
+                for (int j = -1; j < 2; j++)
+                {
+                    //アイテムの種類を決める
+                    int item = Random.Range(1, 11);
+                    //アイテムを置くZ座標のオフセットをランダムに設定
+                    int offsetZ = Random.Range(-5, 6);
+                    //60%コイン配置:30%車配置:10%何もなし
+                    if (1 <= item && item <= 6)
+                    {
+                        //コインを生成
+                        GameObject coin = Instantiate(coinPrefab) as GameObject;
+                        coin.transform.position = new Vector3(posRange * j, coin.transform.position.y, i + offsetZ);
+                    }
+                    else if (7 <= item && item <= 9)
+                    {
+                        //車を生成
+                        GameObject car = Instantiate(carPrefab) as GameObject;
+                        car.transform.position = new Vector3(posRange * j, car.transform.position.y, i + offsetZ);
+                    }
+
+                }
+
+            }
+        }
+
+    }
+
+    //◆課題◆不要になったアイテムを順次破棄（画面外に出たアイテムを直ちに破棄）
+    void OnBecameInvisible()
+    {
+        Destroy(this.gameObject);
+    }
+
 }
